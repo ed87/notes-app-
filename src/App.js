@@ -1,38 +1,67 @@
-import React, { useState, useEffect } from 'react';
-import NoteForm from './components/NoteForm';
-import NoteList from './components/NoteList';
+// import logo from './logo.svg';
+import './App.css';
+import { useState } from 'react';
+import NoteList from './NoteList'
+import NoteForm from './NoteForm'
+function App() {
+  const [notes,setNotes] = useState([{
+      id:1,
+      title:'title 1',
+      body:'body text',
+      reminder:new Date().toLocaleString(),
+      creationDate: new Date().toLocaleString(),
+      color:'blue',
+    },{
+      id: 2,
+      title:'title 2',
+      body:'body 2',
+      reminder:new Date().toLocaleString(),
+      creationDate: new Date().toLocaleString(),
+      color:'green',
+    }])
+  const onDelete = (id) => {
+   var note= notes.filter((obj) => {
+      return obj.id!==id
+   })
+    setNotes(note)
+  }
 
-const App = () => {
-  const [notes, setNotes] = useState([]);
-
-  // Load notes from local storage on initial mount
-  useEffect(() => {
-    const savedNotes = JSON.parse(localStorage.getItem('notes'));
-    if (savedNotes) {
-      setNotes(savedNotes);
+  const addNote = (title,body,color) => {
+    var note={
+      title:title,
+      body:body,
+      color:color,
+      reminder:new Date().toLocaleString(),
+      creationDate: new Date().toLocaleString(),
     }
-  }, []);
+    setNotes(prev=>[...prev,note])
+    
+  }
 
-  // Save notes to local storage whenever the 'notes' state changes
-  useEffect(() => {
-    localStorage.setItem('notes', JSON.stringify(notes));
-  }, [notes]);
-
-  const handleAddNote = (newNote) => {
-    setNotes([...notes, newNote]);
-  };
-
-  const handleDeleteNote = (id) => {
-    setNotes(notes.filter((note) => note.id !== id));
-  };
 
   return (
-    <div className="app">
-      <h1>Notes Application</h1>
-      <NoteForm onAddNote={handleAddNote} />
-      <NoteList notes={notes} onDelete={handleDeleteNote} />
+   <div style={{height:'100vh', paddingTop:'20px'}}>
+        <NoteList addNote={addNote} onDelete={onDelete} notes={notes} />
     </div>
+    
+    
+    // <div className="App">
+    //   <header className="App-header">
+    //     <img src={logo} className="App-logo" alt="logo" />
+    //     <p>
+    //       Edit <code>src/App.js</code> and save to reload.
+    //     </p>
+    //     <a
+    //       className="App-link"
+    //       href="https://reactjs.org"
+    //       target="_blank"
+    //       rel="noopener noreferrer"
+    //     >
+    //       Learn React
+    //     </a>
+    //   </header>
+    // </div>
   );
-};
+}
 
 export default App;
